@@ -1,11 +1,10 @@
 import { FormEvent, useContext, useState } from "react";
 import { X } from 'phosphor-react';
-import { Task } from "../../components/Task";
+import { Checkbox, Separator, Task } from "../../components";
 import { TasksContext } from "../../context/TasksContext";
 
 export function Home() {
   const [task, setTask] = useState("");
-
   const { addNewTask, allTasks } = useContext(TasksContext);
 
   function handleAddNewTodo(event: FormEvent) {
@@ -25,54 +24,64 @@ export function Home() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-center h-screen bg-borderDark text-white px-16 ">
+    <main className="flex flex-col items-center justify-center h-screen bg-bg text-white px-16 ">
       <form onSubmit={handleAddNewTodo} className="w-full">
-        <div className="flex gap-4 pb-8 border-b border-b-borderDark ">
-          <div>
-            <h1 className="font-bold leading-normal text-[3.5rem] mb-4">John Task List</h1>
-            <span className="text-base font-bold text-darkPurple">Notes:</span>
-          </div>
+        <div className="flex justify-between ">
+          <h1 className="font-bold leading-normal text-[3.5rem]">John Task List</h1>
           <div className="p-4 bg-buttonBg rounded-md border border-solid border-borderDark w-14 h-14 mt-5">
-            <button
-              disabled={task.trim() === ""}
-              type="submit"
-              className="disabled:cursor-not-allowed"
-            >
-              🚀
-            </button>
+            🚀
+          </div>
+        </div>
+        <div className="mb-6">
+          <div className="mt-8 pb-8 flex items-center gap-4">
+            <div className="relative w-full">
+              <input
+                type="text"
+                className="w-full mx-auto h-12 rounded-lg bg-darkPurple/30 px-4"
+                placeholder="Add new task"
+                value={task}
+                onChange={event => setTask(event.target.value)}
+              />
+              {task && (
+                <button
+                  type="button"
+                  className="absolute top-3.5 right-4"
+                  onClick={handleCleanTodo}
+                  title="Add new ToDo input"
+                >
+                  <X className="w-6 h-6 text-white" />
+                </button>
+              )}
+            </div>
+            <div>
+              <button
+                disabled={task.trim() === ""}
+                type="submit"
+                className="disabled:cursor-not-allowed border-2 border-solid border-darkPurple/40 p-2.5 rounded-lg text-textDark lg:hover:bg-darkPurple/30 transition-all "
+              >
+                Add
+              </button>
+            </div>
+          </div>
+          <div className="mb">
+
           </div>
         </div>
         <div>
-          <div className="my-8 w-full relative border-b border-solid border-borderDark pb-8">
-            <input
-              type="text"
-              className="w-full mx-auto h-12 rounded-lg bg-slate-600 px-4"
-              placeholder="Add new ToDo"
-              value={task}
-              onChange={event => setTask(event.target.value)}
-            />
-            {task && (
-              <button
-                type="button"
-                className="absolute top-3.5 right-4"
-                onClick={handleCleanTodo}
-                title="Add new ToDo input"
-              >
-                <X className="w-6 h-6 text-white" />
-              </button>
-            )}
-          </div>
-
+          <span className="text-base font-bold text-darkPurple">Notes:</span>
+          <Separator
+            className="my-8"
+          />
+          <ul>
+            {allTasks.map(todo => (
+              <Task
+                key={todo.id}
+                id={todo.id}
+                title={todo.title}
+              />
+            ))}
+          </ul>
         </div>
-        <ul>
-          {allTasks.map(todo => (
-            <Task
-              key={todo.id}
-              id={todo.id}
-              title={todo.title}
-            />
-          ))}
-        </ul>
       </form>
     </main>
   )
