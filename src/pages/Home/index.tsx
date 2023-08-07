@@ -1,11 +1,11 @@
 import { FormEvent, useContext, useState } from "react";
 import { X } from 'phosphor-react';
-import { Checkbox, Separator, Task } from "../../components";
+import { DraggableTaskList, Separator } from "../../components";
 import { TasksContext } from "../../context/TasksContext";
 
 export function Home() {
   const [task, setTask] = useState("");
-  const { addNewTask, allTasks } = useContext(TasksContext);
+  const { addNewTask } = useContext(TasksContext);
 
   function handleAddNewTodo(event: FormEvent) {
     event.preventDefault();
@@ -24,13 +24,15 @@ export function Home() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-center h-screen bg-bg text-white px-16 ">
+    <main className="flex flex-col items-center justify-center h-screen bg-bg text-white px-16 w-screen ">
       <form onSubmit={handleAddNewTodo} className="w-full">
         <div className="flex justify-between ">
           <h1 className="font-bold leading-normal text-[3.5rem]">John Task List</h1>
-          <div className="p-4 bg-buttonBg rounded-md border border-solid border-borderDark w-14 h-14 mt-5">
+          <button
+            className="p-4 bg-buttonBg rounded-md border border-solid border-borderDark w-14 h-14 mt-5"
+          >
             🚀
-          </div>
+          </button>
         </div>
         <div className="mb-6">
           <div className="mt-8 pb-8 flex items-center gap-4">
@@ -63,24 +65,13 @@ export function Home() {
               </button>
             </div>
           </div>
-          <div className="mb">
-
-          </div>
         </div>
         <div>
           <span className="text-base font-bold text-darkPurple">Notes:</span>
           <Separator
             className="my-8"
           />
-          <ul>
-            {allTasks.map(todo => (
-              <Task
-                key={todo.id}
-                id={todo.id}
-                title={todo.title}
-              />
-            ))}
-          </ul>
+          <DraggableTaskList />
         </div>
       </form>
     </main>

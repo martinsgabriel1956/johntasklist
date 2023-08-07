@@ -1,9 +1,9 @@
 import { QueryClientProvider } from 'react-query';
 
+import './styles/global.css';
 import { Home } from "./pages/Home";
 import { TasksProvider } from "./providers/TasksProvider";
 import { queryClient } from "./services/queryClient";
-import './styles/global.css';
 
 export function App() {
   return (

@@ -1,7 +1,7 @@
 export interface TaskType {
   id: string;
   title: string;
-  isFullest: boolean;
+  isCompleted: boolean;
   subtasks?: {
     title: string;
     isCompleted: boolean;

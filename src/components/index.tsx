@@ -1,2 +1,4 @@
 export { Task } from "./Task";
-export { Checkbox, Separator } from "./UI/";
+export { EditTaskModal } from "./EditTaskModal";
+export { DraggableTaskList } from './DragableTaskList';
+export { Checkbox, Separator, Collapse } from "./UI/";

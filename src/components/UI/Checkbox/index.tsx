@@ -18,6 +18,7 @@ export function CheckboxComponent({ text }: CheckboxProps) {
 
     if (!checked) {
       completeTask(task!.id);
+
     } else {
       uncheckCompletedTask(task!.id);
     }
@@ -42,7 +43,7 @@ export function CheckboxComponent({ text }: CheckboxProps) {
           "text-taskHover": checked
         })}
       >
-        {text}
+        {checked ? <s>{text}</s> : text}
       </span>
     </div>
   )

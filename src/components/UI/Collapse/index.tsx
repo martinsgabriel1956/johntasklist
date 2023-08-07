@@ -18,7 +18,7 @@ export function Collapse() {
         <button
           onClick={handleCollapse}
         >
-          {isCollapsed ? <CaretUp size={28} weight="bold" /> : <CaretDown size={28} weight="bold" />}
+          {isCollapsed ? <CaretUp size={24} weight="bold" /> : <CaretDown size={24} weight="bold" />}
         </button>
       </Collapsible.Trigger>
       <Collapsible.Content className='absolute left-24 top-[68%]'>

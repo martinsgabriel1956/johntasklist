@@ -23,7 +23,7 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
     const newTask: TaskType = {
       id: uuid(),
       title: task,
-      isFullest: false,
+      isCompleted: false,
     }
 
     // mutation.mutate();
@@ -35,16 +35,48 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
     setAllTasks(prevState => prevState.filter(task => task.id !== taskId));
   }
 
+  function updateTaskList(taskList: TaskType[]) {
+    setAllTasks(taskList);
+  }
+
   function completeTask(taskId: string) {
-    setAllTasks(prevState => prevState.map(task => task.id === taskId ? { ...task, isCompleted: !task.isFullest } : task));
+    setAllTasks(prevState => prevState.map(task => {
+      if (task.id === taskId) {
+        return { ...task, isCompleted: !task.isCompleted };
+      }
+      return task;
+    }));
   }
 
   function uncheckCompletedTask(taskId: string) {
     setAllTasks(prevState => prevState.map(task => task.id === taskId ? { ...task, isCompleted: false } : task));
   }
 
+  function addSubtask(
+    taskId: string,
+    subtask: {
+      title: string;
+      isCompleted: boolean;
+    }) {
+
+    setAllTasks(prevState => prevState.map(task => {
+      if (task.id === taskId) {
+        return { ...task, subtasks: [...task.subtasks!, subtask] };
+      }
+      return task;
+    }))
+  }
+
   return (
-    <TasksContext.Provider value={{ addNewTask, deleteTask, allTasks, completeTask, uncheckCompletedTask }}>
+    <TasksContext.Provider value={{
+      addNewTask,
+      deleteTask,
+      allTasks,
+      completeTask,
+      uncheckCompletedTask,
+      updateTaskList,
+      addSubtask
+    }}>
       {children}
     </TasksContext.Provider>
   )

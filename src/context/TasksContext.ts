@@ -8,7 +8,14 @@ interface TasksContextTypes {
   allTasks: TaskType[];
   completeTask: (taskId: string) => void;
   uncheckCompletedTask: (taskId: string) => void;
-  // tasks: UseQueryResult<unknown, unknown>;
+  updateTaskList: (taskList: TaskType[]) => void;
+  addSubtask: (
+    taskId: string,
+    subtask: {
+      title: string;
+      isCompleted: boolean;
+    }
+  ) => void;
 }
 
 export const TasksContext = createContext({} as TasksContextTypes);

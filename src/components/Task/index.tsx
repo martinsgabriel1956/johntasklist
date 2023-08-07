@@ -1,24 +1,24 @@
-import { useContext, useState } from "react";
-import { PencilSimpleLine, Trash } from 'phosphor-react';
+import { Ref, useContext, useState } from "react";
+import { DraggableProvided } from "react-beautiful-dnd";
+import { DotsSix, Trash } from 'phosphor-react';
+import { Checkbox, Collapse, EditTaskModal } from "..";
 import { TaskType } from "../../interfaces/TaskType";
-import { Checkbox } from "..";
 import { TasksContext } from "../../context/TasksContext";
-import { EditTaskModal } from "../UI/EditTaskModal";
-import { Collapse } from "../UI/Collapse";
 
-type TaskProps = Pick<TaskType, "title" | "id">;
+type TasksType = Pick<TaskType, "title" | "id">;
+interface TaskProps extends TasksType {
+  innerRef: Ref<HTMLLIElement>;
+  provided: DraggableProvided;
+}
 
-export function Task({ title, id }: TaskProps) {
+export function Task({ title, id, innerRef, provided }: TaskProps) {
   const [isOpened, setIsOpened] = useState(false);
-  const { deleteTask } = useContext(TasksContext);
+  const { deleteTask, allTasks } = useContext(TasksContext);
+  const task = allTasks.find(task => task.id === id);
 
   function handleDeleteTask() {
     deleteTask(id);
   }
-
-  // function handleEditTask() {
-  //   // Code    
-  // }
 
   function handleOpenEditModal() {
     setIsOpened(!isOpened)
@@ -28,25 +28,36 @@ export function Task({ title, id }: TaskProps) {
     <li
       key={title}
       className="flex items-center justify-between mb-8"
-      draggable
+      ref={innerRef}
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
     >
-      <Checkbox
-        text={title}
-      />
+      <div className="flex items-center gap-4">
+        <button title="Drag task">
+          <DotsSix size={32} weight="bold" />
+        </button>
+        <Checkbox
+          text={title}
+        />
+      </div>
 
       <div className="flex items-center gap-3">
         <EditTaskModal
           isOpenModal={isOpened}
           setIsOpenModal={handleOpenEditModal}
+          task={task}
         />
 
         <button
+          title="Delete task"
           type="button"
           onClick={handleDeleteTask}
         >
-          <Trash size={28} />
+          <Trash size={24} />
         </button>
-        <Collapse />
+        {task?.subtasks && (
+          <Collapse />
+        )}
       </div>
 
     </li>
