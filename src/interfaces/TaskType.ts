@@ -3,6 +3,7 @@ export interface TaskType {
   title: string;
   isCompleted: boolean;
   subtasks?: {
+    id: string;
     title: string;
     isCompleted: boolean;
   }[];

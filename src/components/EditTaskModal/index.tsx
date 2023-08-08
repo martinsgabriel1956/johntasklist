@@ -1,10 +1,10 @@
+import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { PencilSimpleLine, X } from 'phosphor-react';
-import { Separator } from '..';
-import { useContext } from 'react';
-import { TasksContext } from '../../context/TasksContext';
+import { v4 as uuid } from 'uuid';
+import { Separator, Subtask } from '..';
 import { TaskType } from '../../interfaces/TaskType';
-import { Subtask } from '../UI/Subtask';
+import { SubtaskType } from '../../interfaces/SubtaskType';
 
 interface EditTaskModalProps {
   isOpenModal: boolean;
@@ -13,15 +13,16 @@ interface EditTaskModalProps {
 }
 
 export function EditTaskModal({ isOpenModal, setIsOpenModal, task }: EditTaskModalProps) {
-  const { addSubtask } = useContext(TasksContext);
+  const [subtasks, setSubtasks] = useState<SubtaskType[]>([]);
 
-  function handleAddNewSubtask() {
+  function handleGenerateNewSubtask() {
     const subtask = {
+      id: uuid(),
       title: '',
       isCompleted: false,
     }
 
-    addSubtask(task.id,)
+    setSubtasks(prevState => [...prevState, subtask])
   }
 
   return (
@@ -53,7 +54,7 @@ export function EditTaskModal({ isOpenModal, setIsOpenModal, task }: EditTaskMod
               <button
                 className='border-2 border-solid border-darker rounded-md p-3 bg-darkPurple/30 text-white hover:bg-gradient-to-r hover:from-gradientFrom hover:to-gradientTo hover:transition-all'
                 type='button'
-                onClick={handleAddNewSubtask}
+                onClick={handleGenerateNewSubtask}
               >
                 Add Subtasks
               </button>
@@ -62,11 +63,14 @@ export function EditTaskModal({ isOpenModal, setIsOpenModal, task }: EditTaskMod
             <Separator
               className='mt-6 bg-borderDark'
             />
-
-            <Subtask
-              className="mt-4"
-            // task={task}
-            />
+            {subtasks.map(subtask => (
+              <Subtask
+                key={subtask.id}
+                className="mt-4"
+                subtaskId={subtask.id}
+                taskId={task.id}
+              />
+            ))}
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>

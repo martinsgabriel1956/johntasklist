@@ -7,13 +7,14 @@ import { TasksContext } from "../../context/TasksContext";
 
 type TasksType = Pick<TaskType, "title" | "id">;
 interface TaskProps extends TasksType {
-  innerRef: Ref<HTMLLIElement>;
-  provided: DraggableProvided;
+  innerRef?: Ref<HTMLLIElement>;
+  provided?: DraggableProvided;
 }
 
 export function Task({ title, id, innerRef, provided }: TaskProps) {
   const [isOpened, setIsOpened] = useState(false);
-  const { deleteTask, allTasks } = useContext(TasksContext);
+  const [checked, setChecked] = useState(false);
+  const { completeTask, uncheckCompletedTask, deleteTask, allTasks } = useContext(TasksContext);
   const task = allTasks.find(task => task.id === id);
 
   function handleDeleteTask() {
@@ -24,20 +25,34 @@ export function Task({ title, id, innerRef, provided }: TaskProps) {
     setIsOpened(!isOpened)
   }
 
+  function handleChecked() {
+    const task = allTasks.find(task => task.title === title);
+    setChecked(!checked);
+
+    if (!checked) {
+      completeTask(task!.id);
+
+    } else {
+      uncheckCompletedTask(task!.id);
+    }
+  }
+
   return (
     <li
       key={title}
       className="flex items-center justify-between mb-8"
       ref={innerRef}
-      {...provided.draggableProps}
-      {...provided.dragHandleProps}
+      {...provided?.draggableProps}
+      {...provided?.dragHandleProps}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 relative">
         <button title="Drag task">
           <DotsSix size={32} weight="bold" />
         </button>
         <Checkbox
           text={title}
+          onCheckedChange={handleChecked}
+          checked={checked}
         />
       </div>
 
@@ -45,7 +60,7 @@ export function Task({ title, id, innerRef, provided }: TaskProps) {
         <EditTaskModal
           isOpenModal={isOpened}
           setIsOpenModal={handleOpenEditModal}
-          task={task}
+          task={task!}
         />
 
         <button
@@ -55,9 +70,12 @@ export function Task({ title, id, innerRef, provided }: TaskProps) {
         >
           <Trash size={24} />
         </button>
+
+
         {task?.subtasks && (
           <Collapse />
         )}
+
       </div>
 
     </li>
