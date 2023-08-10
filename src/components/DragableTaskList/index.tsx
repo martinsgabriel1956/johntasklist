@@ -14,8 +14,6 @@ export function DraggableTaskList() {
     updateTaskList(items);
   };
 
-  console.log({ allTasks });
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="tasks">
@@ -36,6 +34,7 @@ export function DraggableTaskList() {
                     title={todo.title}
                     innerRef={provided.innerRef}
                     provided={provided}
+                    type="task"
                   />
                 )}
               </Draggable>

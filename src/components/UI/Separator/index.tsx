@@ -6,6 +6,6 @@ interface SeparatorComponentProps {
 
 export function SeparatorComponent({ className }: SeparatorComponentProps) {
   return (
-    <Separator.Root className={`h-[0.0625rem] bg-borderDark ${className}`} />
+    <Separator.Root className={`h-[0.0625rem] ${className}`} />
   )
 }

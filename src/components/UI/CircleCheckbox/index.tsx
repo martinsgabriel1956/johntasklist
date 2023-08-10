@@ -1,22 +1,21 @@
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { Check } from 'phosphor-react';
 import clsx from 'clsx';
+import { CheckboxProps } from '../Checkbox';
 import { useContext } from 'react';
 import { ThemeContext } from '../../../context/ThemeContext';
 
-export interface CheckboxProps {
-  text: string;
-  onCheckedChange: (checked: boolean) => void;
-  checked: boolean;
+interface CircleCheckboxProps extends CheckboxProps {
+  defaultChecked: boolean;
 }
 
-export function CheckboxComponent({ text, onCheckedChange, checked }: CheckboxProps) {
+export function CircleCheckbox({ checked, text, onCheckedChange, defaultChecked }: CircleCheckboxProps) {
   const { theme } = useContext(ThemeContext);
 
   return (
     <div className="flex gap-4 items-center group">
       <Checkbox.Root
-        className={clsx("w-6 h-6 rounded-[0.31rem] border-2 border-solid flex items-center justify-center bg-gradient-to-r ", {
+        className={clsx("w-6 h-6 rounded-full border-2 border-solid flex items-center justify-center bg-gradient-to-r  ", {
           "border-dark-checkboxBorder": theme === "dark",
           "border-dark-text": theme === "light",
           "from-dark-gradientFrom": theme === "dark",
@@ -26,20 +25,21 @@ export function CheckboxComponent({ text, onCheckedChange, checked }: CheckboxPr
         })}
         onCheckedChange={onCheckedChange}
         checked={checked}
+        defaultChecked={defaultChecked}
       >
         <Checkbox.Indicator>
           <Check
             size={18}
             weight='bold'
-            className={clsx("", {
+            className={clsx('', {
               "text-dark-text": theme === "dark",
-              "text-light-text": theme === "light",
+              "text-light-text": theme === "light"
             })}
           />
         </Checkbox.Indicator>
       </Checkbox.Root>
       <span
-        className={clsx('text-xl ', {
+        className={clsx('text-xl', {
           "text-taskHover": checked,
           "text-dark-text": theme === "dark",
           "text-light-text": theme === "light"
@@ -48,5 +48,5 @@ export function CheckboxComponent({ text, onCheckedChange, checked }: CheckboxPr
         {checked ? <s>{text}</s> : text}
       </span>
     </div>
-  )
+  );
 }

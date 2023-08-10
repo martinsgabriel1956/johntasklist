@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { TasksContext } from "../context/TasksContext";
 import { TaskType } from "../interfaces/TaskType";
 import { SubtaskType } from "../interfaces/SubtaskType";
+import { changeIsCompletedStatus, useChangeIsCompletedStatus } from "../utils/useChangeIsCompletedStatus";
 
 export interface TasksProviderProps {
   children: ReactNode;
@@ -11,6 +12,7 @@ export interface TasksProviderProps {
 export const TasksProvider = ({ children }: TasksProviderProps) => {
   const [allTasks, setAllTasks] = useState<TaskType[]>([]);
   const [subtasks, setSubtasks] = useState<SubtaskType[]>([]);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   function addNewTask(task: string) {
     const newTask: TaskType = {
@@ -18,8 +20,6 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
       title: task,
       isCompleted: false,
     }
-
-    // mutation.mutate();
 
     setAllTasks(prevState => [...prevState, newTask]);
   }
@@ -39,6 +39,16 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
       return task;
     }))
 
+    setSubtasks(prevState => prevState.filter(subtask => subtask.id !== subtask.id));
+  }
+
+  function generateNewSubtaskInput() {
+    const subtask = {
+      id: uuid(),
+      title: '',
+      isCompleted: false,
+    }
+
     setSubtasks(prevState => [...prevState, subtask]);
   }
 
@@ -47,13 +57,21 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
   }
 
   function deleteSubtask(subtaskId: string, taskId: string) {
-    setSubtasks(prevState => prevState.filter(subtask => subtask.id !== subtaskId));
     setAllTasks(prevState => prevState.map(task => {
       if (task.id === taskId) {
-        return { ...task, subtasks: task.subtasks?.filter(subtask => subtask.id !== subtaskId) };
+        const subtaskRemoved = task.subtasks?.filter(subtask => subtask.id !== subtaskId);
+        return { ...task, subtasks: subtaskRemoved };
       }
       return task;
     }))
+  }
+
+  function deleteSubtaskInput(subtaskId: string) {
+    setSubtasks(prevState => prevState.filter(subtask => subtask.id !== subtaskId));
+  }
+
+  function clearSubtasksInput() {
+    setSubtasks([]);
   }
 
   function updateTaskList(taskList: TaskType[]) {
@@ -61,24 +79,55 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
   }
 
   function completeTask(taskId: string) {
+    setAllTasks(prevState => changeIsCompletedStatus(prevState, taskId, true));
+  }
+
+  function uncheckCompletedTask(taskId: string) {
+    setAllTasks(prevState => changeIsCompletedStatus(prevState, taskId, false));
+  }
+
+  function checkSubtask(taskId: string, subtaskId: string) {
     setAllTasks(prevState => prevState.map(task => {
       if (task.id === taskId) {
-        return { ...task, isCompleted: !task.isCompleted };
+        return { ...task, subtasks: task.subtasks?.map(subtask => subtask.id === subtaskId ? { ...subtask, isCompleted: true } : subtask) };
+      }
+      return task;
+    }))
+  }
+
+  function uncheckCompletedSubtask(subtaskId: string) {
+    setAllTasks(prevState => prevState.map(task => {
+      if (task.subtasks?.find(subtask => subtask.id === subtaskId)) {
+        return { ...task, subtasks: task.subtasks?.map(subtask => subtask.id === subtaskId ? { ...subtask, isCompleted: false } : subtask) };
+      }
+      return task;
+    }))
+  }
+
+  function editSubtask(taskId: string, subtaskId: string, title: string) {
+    setAllTasks(prevState => prevState.map(task => {
+      if (task.id === taskId) {
+        return { ...task, subtasks: task.subtasks?.map(subtask => subtask.id === subtaskId ? { ...subtask, title } : subtask) };
       }
       return task;
     }));
   }
 
-  function completeSubtask(taskId: string, subtaskId: string) {
-
+  function changeIsEditModeStatus(status: boolean) {
+    setIsEditMode(status);
   }
 
-  function uncheckCompletedTask(taskId: string) {
-    setAllTasks(prevState => prevState.map(task => task.id === taskId ? { ...task, isCompleted: false } : task));
+  function changeIsEditableStatus(status: boolean, taskId: string, subtaskId: string) {
+    setAllTasks(prevState => prevState.map(task => {
+      if (task.id === taskId) {
+        return { ...task, subtasks: task.subtasks?.map(subtask => subtask.id === subtaskId ? { ...subtask, isEditable: status } : subtask) };
+      }
+      return task;
+    }))
   }
 
-  function uncheckCompletedSubtask(subtaskId: string) {
-    setSubtasks(prevState => prevState.map(subtask => subtask.id === subtaskId ? { ...subtask, isCompleted: false } : subtask));
+  function updateSubtaskList() {
+
   }
 
   return (
@@ -92,8 +141,16 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
       updateTaskList,
       addNewSubtask,
       deleteSubtask,
-      completeSubtask,
-      uncheckCompletedSubtask
+      checkSubtask,
+      uncheckCompletedSubtask,
+      generateNewSubtaskInput,
+      deleteSubtaskInput,
+      clearSubtasksInput,
+      editSubtask,
+      changeIsEditModeStatus,
+      isEditMode,
+      changeIsEditableStatus,
+      updateSubtaskList
     }}>
       {children}
     </TasksContext.Provider>

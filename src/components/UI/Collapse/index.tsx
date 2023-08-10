@@ -1,12 +1,10 @@
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { CaretDown, CaretUp } from 'phosphor-react';
-import { useContext, useState } from 'react';
-import { TasksContext } from '../../../context/TasksContext';
-import { Task } from '../..';
+import { useState } from 'react';
+import { DraggableSubtaskList } from '../../DraggableSubtaskList';
 
 export function Collapse() {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { allTasks } = useContext(TasksContext);
 
   function handleCollapse() {
     setIsCollapsed(!isCollapsed);
@@ -22,13 +20,7 @@ export function Collapse() {
         </button>
       </Collapsible.Trigger>
       <Collapsible.Content className='absolute left-24 top-[70%]'>
-        {allTasks.map((task) => (
-          <Task
-            key={task.id}
-            title={task.title}
-            id={task.id}
-          />
-        ))}
+        <DraggableSubtaskList />
       </Collapsible.Content>
     </Collapsible.Root>
 

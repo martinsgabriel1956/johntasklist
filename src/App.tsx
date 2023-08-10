@@ -1,16 +1,17 @@
 import { QueryClientProvider } from 'react-query';
-
 import './styles/global.css';
 import { Home } from "./pages/Home";
-import { TasksProvider } from "./providers/TasksProvider";
+import { TasksProvider, ThemeProvider } from './providers';
 import { queryClient } from "./services/queryClient";
 
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TasksProvider>
-        <Home />
-      </TasksProvider>
+      <ThemeProvider>
+        <TasksProvider>
+          <Home />
+        </TasksProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   )
 }

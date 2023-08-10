@@ -1,11 +1,14 @@
 import { FormEvent, useContext, useState } from "react";
 import { X } from 'phosphor-react';
-import { DraggableTaskList, Separator } from "../../components";
+import clsx from 'clsx';
+import { DraggableTaskList, Separator, ThemeSwitchButton } from "../../components";
 import { TasksContext } from "../../context/TasksContext";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export function Home() {
   const [task, setTask] = useState("");
-  const { addNewTask } = useContext(TasksContext);
+  const { addNewTask, allTasks } = useContext(TasksContext);
+  const { theme } = useContext(ThemeContext);
 
   function handleAddNewTodo(event: FormEvent) {
     event.preventDefault();
@@ -24,22 +27,44 @@ export function Home() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-center h-screen bg-bg text-white px-16 w-screen ">
+    <main
+      className={clsx("flex flex-col items-center justify-center h-screen relative bg-bg  px-16 w-screen ", {
+        "bg-dark-bg": theme === "dark",
+        "bg-light-bg": theme === "light",
+      })}
+    >
       <form onSubmit={handleAddNewTodo} className="w-full">
         <div className="flex justify-between ">
-          <h1 className="font-bold leading-normal text-[3.5rem]">John Task List</h1>
-          <button
-            className="p-4 bg-buttonBg rounded-md border border-solid border-borderDark w-14 h-14 mt-5"
+          <h1
+            className={clsx("font-bold leading-normal text-[3.5rem]", {
+              "text-dark-title": theme === "dark",
+              "text-light-title": theme === "light",
+            })}
+          >
+            John Task List
+          </h1>
+          <div
+            className={clsx("p-4 rounded-md border border-solid w-14 h-14 mt-5", {
+              "bg-buttonBgDark": theme === "dark",
+              "border-dark-border": theme === "dark",
+              "bg-buttonBgLight": theme === "light",
+              "border-light-border": theme === "light",
+            })}
           >
             🚀
-          </button>
+          </div>
         </div>
         <div className="mb-6">
           <div className="mt-8 pb-8 flex items-center gap-4">
             <div className="relative w-full">
               <input
                 type="text"
-                className="w-full mx-auto h-12 rounded-lg bg-darkPurple/30 px-4"
+                className={clsx("w-full mx-auto h-12 rounded-lg px-4", {
+                  "bg-dark-purple/30": theme === "dark",
+                  "bg-dark-text/30": theme === "light",
+                  "text-white": theme === "dark",
+                  "text-light-text": theme === "light",
+                })}
                 placeholder="Add new task"
                 value={task}
                 onChange={event => setTask(event.target.value)}
@@ -59,7 +84,13 @@ export function Home() {
               <button
                 disabled={task.trim() === ""}
                 type="submit"
-                className="disabled:cursor-not-allowed border-2 border-solid border-darkPurple/40 p-2.5 rounded-lg text-textDark lg:hover:bg-darkPurple/30 transition-all "
+                className={clsx("disabled:cursor-not-allowed border-2 border-solid  p-2.5 rounded-lg   transition-all disabled:opacity-[0.75]", {
+                  "border-dark-purple/40": theme === "dark",
+                  "border-dark-text/90": theme === "light",
+                  "text-dark-text": theme === "dark",
+                  "text-light-text": theme === "light",
+                  "lg:hover:bg-dark-purple/30": task.trim() !== ""
+                })}
               >
                 Add
               </button>
@@ -67,13 +98,24 @@ export function Home() {
           </div>
         </div>
         <div>
-          <span className="text-base font-bold text-darkPurple">Notes:</span>
+          <span
+            className={clsx("text-base font-bold ", {
+              "text-dark-purple": theme === "dark",
+              "text-light-text": theme === "light"
+            })}
+          >
+            Notes:
+          </span>
           <Separator
-            className="my-8"
+            className={clsx("my-8", {
+              "bg-dark-border": theme === "dark",
+              "bg-light-border": theme === "light"
+            })}
           />
           <DraggableTaskList />
         </div>
       </form>
+      <ThemeSwitchButton />
     </main>
   )
 }

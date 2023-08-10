@@ -1,12 +1,14 @@
 import { Ref, useContext, useState } from "react";
 import { DraggableProvided } from "react-beautiful-dnd";
 import { DotsSix, Trash } from 'phosphor-react';
+import clsx from 'clsx';
 import { Checkbox, Collapse, EditTaskModal } from "..";
 import { TaskType } from "../../interfaces/TaskType";
 import { TasksContext } from "../../context/TasksContext";
+import { ThemeContext } from "../../context/ThemeContext";
 
 type TasksType = Pick<TaskType, "title" | "id">;
-interface TaskProps extends TasksType {
+export interface TaskProps extends TasksType {
   innerRef?: Ref<HTMLLIElement>;
   provided?: DraggableProvided;
 }
@@ -14,7 +16,8 @@ interface TaskProps extends TasksType {
 export function Task({ title, id, innerRef, provided }: TaskProps) {
   const [isOpened, setIsOpened] = useState(false);
   const [checked, setChecked] = useState(false);
-  const { completeTask, uncheckCompletedTask, deleteTask, allTasks } = useContext(TasksContext);
+  const { completeTask, uncheckCompletedTask, deleteTask, allTasks, subtasks, clearSubtasksInput, isEditMode, changeIsEditModeStatus } = useContext(TasksContext);
+  const { theme } = useContext(ThemeContext);
   const task = allTasks.find(task => task.id === id);
 
   function handleDeleteTask() {
@@ -23,15 +26,20 @@ export function Task({ title, id, innerRef, provided }: TaskProps) {
 
   function handleOpenEditModal() {
     setIsOpened(!isOpened)
+    const hasSubtasksInput = !isOpened && subtasks.length > 0;
+
+    if (hasSubtasksInput || isEditMode) {
+      clearSubtasksInput();
+      changeIsEditModeStatus(false);
+    }
   }
 
   function handleChecked() {
-    const task = allTasks.find(task => task.title === title);
+    const task = allTasks.find(task => task.title === title)
     setChecked(!checked);
 
     if (!checked) {
-      completeTask(task!.id);
-
+      completeTask(task!.id)
     } else {
       uncheckCompletedTask(task!.id);
     }
@@ -47,7 +55,7 @@ export function Task({ title, id, innerRef, provided }: TaskProps) {
     >
       <div className="flex items-center gap-4 relative">
         <button title="Drag task">
-          <DotsSix size={32} weight="bold" />
+          <DotsSix size={32} weight="bold" className={`${theme === "dark" ? "text-white" : "text-light-text"}`} />
         </button>
         <Checkbox
           text={title}
@@ -56,7 +64,12 @@ export function Task({ title, id, innerRef, provided }: TaskProps) {
         />
       </div>
 
-      <div className="flex items-center gap-3">
+      <div
+        className={clsx("flex items-center gap-3", {
+          "text-white": theme === "dark",
+          "text-light-text": theme === "light"
+        })}
+      >
         <EditTaskModal
           isOpenModal={isOpened}
           setIsOpenModal={handleOpenEditModal}
@@ -71,13 +84,10 @@ export function Task({ title, id, innerRef, provided }: TaskProps) {
           <Trash size={24} />
         </button>
 
-
-        {task?.subtasks && (
+        {task?.subtasks && task.subtasks.length > 0 && (
           <Collapse />
         )}
-
       </div>
-
     </li>
   );
 }

@@ -4,15 +4,29 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: "#1E1F25",
-        darker: "#0E0E11",
-        buttonBg: "#24242D",
-        borderDark: "#29292F",
-        darkPurple: "#9494B8",
-        gradientFrom: "#2B2D37 ",
+        buttonBgDark: "#24242D",
         gradientTo: "#262933",
-        textDark: "#DADADA",
         taskHover: "#7D7D94",
+        buttonBgLight: "#F2F3FF",
+
+        dark: {
+          bg: "#1E1F25",
+          title: "#FFF",
+          purple: "#9494B8",
+          border: "#29292F",
+          text: "#DADADA",
+          checkboxBorder: "#0E0E11",
+          gradientFrom: "#2B2D37 ",
+          gradientTo: "#262933",
+        },
+        light: {
+          bg: "#FFF",
+          title: "#000",
+          text: "#575767",
+          border: "#EBEBEB",
+          gradientFrom: "#FCFCFC ",
+          gradientTo: "#F8F8F8",
+        },
       },
     },
   },

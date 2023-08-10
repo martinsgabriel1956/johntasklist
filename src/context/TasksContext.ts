@@ -1,7 +1,6 @@
 import { createContext } from "react";
 import { TaskType } from "../interfaces/TaskType";
 import { SubtaskType } from "../interfaces/SubtaskType";
-// import { UseQueryResult } from "react-query";
 
 interface TasksContextTypes {
   addNewTask: (task: string) => void;
@@ -13,15 +12,27 @@ interface TasksContextTypes {
       isCompleted: boolean;
     }
   ) => void;
+  generateNewSubtaskInput: () => void;
   deleteTask: (taskId: string) => void;
   deleteSubtask: (taskId: string, subtaskId: string) => void;
+  deleteSubtaskInput: (subtaskId: string) => void;
   allTasks: TaskType[];
   subtasks: SubtaskType[];
-  completeTask: (taskId: string) => void;
-  completeSubtask: (taskId: string, subtaskId: string) => void;
+  isEditMode: boolean;
+  completeTask: (id: string) => void;
+  checkSubtask: (taskId: string, subtaskId: string) => void;
   uncheckCompletedTask: (taskId: string) => void;
-  uncheckCompletedSubtask: (taskId: string, subtaskId: string) => void;
+  uncheckCompletedSubtask: (subtaskId: string) => void;
   updateTaskList: (taskList: TaskType[]) => void;
+  updateSubtaskList: (subtaskList: SubtaskType[]) => void;
+  clearSubtasksInput: () => void;
+  editSubtask: (subtaskId: string, taskId: string, title: string) => void;
+  changeIsEditModeStatus: (status: boolean) => void;
+  changeIsEditableStatus: (
+    status: boolean,
+    taskId: string,
+    subtaskId: string
+  ) => void;
 }
 
 export const TasksContext = createContext({} as TasksContextTypes);
