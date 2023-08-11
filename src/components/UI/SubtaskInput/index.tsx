@@ -16,6 +16,12 @@ export function SubtaskInput({ subtaskId, taskId, className, title }: SubtaskInp
   const [subtaskTitle, setSubtaskTitle] = useState(isEditMode ? title : "");
 
   function handleAddSubtask() {
+    const isEmpty = subtaskTitle?.trim() === "";
+
+    if (isEmpty) {
+      return;
+    }
+
     const subtask = {
       id: subtaskId,
       title: subtaskTitle!,

@@ -19,10 +19,11 @@ export function DraggableTaskList() {
       <Droppable droppableId="tasks">
         {(provided) => (
           <ul
+            className="h-96 overflow-auto pr-4 scrollbar-thin scrollbar-track-zin-950 scrollbar-thumb-zinc-800"
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
-            {allTasks.map((todo, index) => (
+            {allTasks ? allTasks.map((todo, index) => (
               <Draggable
                 key={todo.id}
                 draggableId={todo.id}
@@ -34,11 +35,10 @@ export function DraggableTaskList() {
                     title={todo.title}
                     innerRef={provided.innerRef}
                     provided={provided}
-                    type="task"
                   />
                 )}
               </Draggable>
-            ))}
+            )) : <></>}
             {provided.placeholder}
           </ul>
         )}

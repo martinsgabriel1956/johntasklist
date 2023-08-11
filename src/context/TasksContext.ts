@@ -20,11 +20,11 @@ interface TasksContextTypes {
   subtasks: SubtaskType[];
   isEditMode: boolean;
   completeTask: (id: string) => void;
-  checkSubtask: (taskId: string, subtaskId: string) => void;
+  checkSubtask: (subtaskId: string) => void;
   uncheckCompletedTask: (taskId: string) => void;
   uncheckCompletedSubtask: (subtaskId: string) => void;
   updateTaskList: (taskList: TaskType[]) => void;
-  updateSubtaskList: (subtaskList: SubtaskType[]) => void;
+  updateSubtaskList: (subtaskList: SubtaskType[], taskId: string) => void;
   clearSubtasksInput: () => void;
   editSubtask: (subtaskId: string, taskId: string, title: string) => void;
   changeIsEditModeStatus: (status: boolean) => void;

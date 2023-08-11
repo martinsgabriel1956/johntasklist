@@ -1,19 +1,19 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { TasksContext } from "../../context/TasksContext";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Subtask } from "../UI/Subtask";
 
 export function DraggableSubtaskList() {
   const { allTasks, updateSubtaskList } = useContext(TasksContext);
+  const [taskId, setTaskId] = useState("");
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
-    const allSubtask = allTasks.map(task => task.subtasks!)
-
+    const allSubtask = allTasks.map(task => task.subtasks!);
     const items = Array.from(allSubtask);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    updateSubtaskList(items.flat());
+    updateSubtaskList(items.flat(), taskId);
   };
 
   return (
@@ -31,15 +31,18 @@ export function DraggableSubtaskList() {
                   draggableId={subtask.id}
                   index={index}
                 >
-                  {(provided) => (
-                    <Subtask
-                      id={subtask.id}
-                      title={subtask.title}
-                      innerRef={provided.innerRef}
-                      provided={provided}
-                      type="subtask"
-                    />
-                  )}
+                  {(provided) => {
+                    setTaskId(task.id);
+                    return (
+                      <Subtask
+                        id={subtask.id}
+                        taskId={task.id}
+                        title={subtask.title}
+                        innerRef={provided.innerRef}
+                        provided={provided}
+                      />
+                    )
+                  }}
                 </Draggable>
               ))
             })}

@@ -33,7 +33,7 @@ export function ModalSubtask({ className, subtaskId, taskId, title, ...props }: 
     if (checked) {
       uncheckCompletedSubtask(subtaskId);
     } else {
-      checkSubtask(taskId, subtaskId);
+      checkSubtask(subtaskId);
     }
   }
 
@@ -54,7 +54,7 @@ export function ModalSubtask({ className, subtaskId, taskId, title, ...props }: 
                 text={title}
                 onCheckedChange={handleCheckedChange}
                 checked={checked}
-                defaultChecked={subtaskStatus!.isCompleted}
+                defaultChecked={subtaskStatus ? subtaskStatus.isCompleted : false}
               />
 
               <div

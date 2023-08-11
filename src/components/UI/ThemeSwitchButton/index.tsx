@@ -12,7 +12,7 @@ export function ThemeSwitchButton() {
 
   return (
     <div
-      className={clsx("flex items-center justify-center rounded-md border border-solid  w-12 h-12 absolute right-[4.5rem] top-16 transition-all", {
+      className={clsx("flex items-center justify-center rounded-md border border-solid  w-12 h-12 absolute max-md:right-[3rem] right-[4.5rem] top-16 transition-all", {
         "bg-buttonBgDark": theme === "dark",
         "border-dark-border": theme === "dark",
         "bg-buttonBgLight": theme === "light",

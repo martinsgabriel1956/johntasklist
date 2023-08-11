@@ -55,7 +55,7 @@ export function EditTaskModal({ isOpenModal, setIsOpenModal, task }: EditTaskMod
                   "text-dark-bg": theme === "light",
                 })}
               >
-                {task.title}
+                {task?.title}
               </h1>
               <div className="">
                 <button
@@ -97,16 +97,16 @@ export function EditTaskModal({ isOpenModal, setIsOpenModal, task }: EditTaskMod
               className='mt-6 bg-dark-border'
             />
 
-            {subtasks.map(subtask => (
+            {subtasks?.map(subtask => (
               <SubtaskInput
                 key={subtask.id}
                 className="mt-4"
                 subtaskId={subtask.id}
-                taskId={task.id}
+                taskId={task?.id}
               />
             ))}
 
-            {task.subtasks && task.subtasks.map(subtask => (
+            {task?.subtasks && task.subtasks.map(subtask => (
               <ModalSubtask
                 key={subtask.id}
                 className="mt-4"

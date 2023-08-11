@@ -6,12 +6,12 @@ import { queryClient } from "./services/queryClient";
 
 export function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
         <TasksProvider>
           <Home />
         </TasksProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }

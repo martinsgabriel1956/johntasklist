@@ -19,7 +19,7 @@ export function Collapse() {
           {isCollapsed ? <CaretUp size={24} weight="bold" /> : <CaretDown size={24} weight="bold" />}
         </button>
       </Collapsible.Trigger>
-      <Collapsible.Content className='absolute left-24 top-[70%]'>
+      <Collapsible.Content className='absolute top-12 left-20'>
         <DraggableSubtaskList />
       </Collapsible.Content>
     </Collapsible.Root>

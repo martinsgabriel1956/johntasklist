@@ -16,7 +16,7 @@ export interface TaskProps extends TasksType {
 export function Task({ title, id, innerRef, provided }: TaskProps) {
   const [isOpened, setIsOpened] = useState(false);
   const [checked, setChecked] = useState(false);
-  const { completeTask, uncheckCompletedTask, deleteTask, allTasks, subtasks, clearSubtasksInput, isEditMode, changeIsEditModeStatus } = useContext(TasksContext);
+  const { completeTask, uncheckCompletedTask, deleteTask, subtasks, clearSubtasksInput, isEditMode, changeIsEditModeStatus, allTasks } = useContext(TasksContext);
   const { theme } = useContext(ThemeContext);
   const task = allTasks.find(task => task.id === id);
 
@@ -48,12 +48,12 @@ export function Task({ title, id, innerRef, provided }: TaskProps) {
   return (
     <li
       key={title}
-      className="flex items-center justify-between mb-8"
+      className="flex items-center justify-between mb-8 relative h-25 h-auto"
       ref={innerRef}
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}
     >
-      <div className="flex items-center gap-4 relative">
+      <div className="flex items-center gap-4 ">
         <button title="Drag task">
           <DotsSix size={32} weight="bold" className={`${theme === "dark" ? "text-white" : "text-light-text"}`} />
         </button>
@@ -73,7 +73,11 @@ export function Task({ title, id, innerRef, provided }: TaskProps) {
         <EditTaskModal
           isOpenModal={isOpened}
           setIsOpenModal={handleOpenEditModal}
-          task={task!}
+          task={task ?? {
+            id: "",
+            isCompleted: false,
+            title: "",
+          }}
         />
 
         <button

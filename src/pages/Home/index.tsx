@@ -7,7 +7,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 
 export function Home() {
   const [task, setTask] = useState("");
-  const { addNewTask, allTasks } = useContext(TasksContext);
+  const { addNewTask } = useContext(TasksContext);
   const { theme } = useContext(ThemeContext);
 
   function handleAddNewTodo(event: FormEvent) {
@@ -28,7 +28,7 @@ export function Home() {
 
   return (
     <main
-      className={clsx("flex flex-col items-center justify-center h-screen relative bg-bg  px-16 w-screen ", {
+      className={clsx("flex flex-col items-center justify-center max-h-screen h-screen relative bg-bg  px-16 max-md:px-8 w-screen ", {
         "bg-dark-bg": theme === "dark",
         "bg-light-bg": theme === "light",
       })}
@@ -43,16 +43,6 @@ export function Home() {
           >
             John Task List
           </h1>
-          <div
-            className={clsx("p-4 rounded-md border border-solid w-14 h-14 mt-5", {
-              "bg-buttonBgDark": theme === "dark",
-              "border-dark-border": theme === "dark",
-              "bg-buttonBgLight": theme === "light",
-              "border-light-border": theme === "light",
-            })}
-          >
-            🚀
-          </div>
         </div>
         <div className="mb-6">
           <div className="mt-8 pb-8 flex items-center gap-4">
@@ -107,7 +97,7 @@ export function Home() {
             Notes:
           </span>
           <Separator
-            className={clsx("my-8", {
+            className={clsx("my-8 ", {
               "bg-dark-border": theme === "dark",
               "bg-light-border": theme === "light"
             })}

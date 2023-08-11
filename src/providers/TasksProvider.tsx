@@ -3,7 +3,8 @@ import { v4 as uuid } from 'uuid';
 import { TasksContext } from "../context/TasksContext";
 import { TaskType } from "../interfaces/TaskType";
 import { SubtaskType } from "../interfaces/SubtaskType";
-import { changeIsCompletedStatus, useChangeIsCompletedStatus } from "../utils/useChangeIsCompletedStatus";
+import { changeIsCompletedTaskStatus } from "../utils/changeIsCompletedTaskStatus";
+import { changeIsCompetedSubtaskStatus } from "../utils/changeIsCompleteSubtaskStatus";
 
 export interface TasksProviderProps {
   children: ReactNode;
@@ -34,7 +35,7 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
 
     setAllTasks(prevState => prevState.map(task => {
       if (task.id === taskId) {
-        return { ...task, subtasks: task.subtasks ? [...task.subtasks!, subtask] : [subtask] };
+        return { ...task, subtasks: task.subtasks ? [...task.subtasks, subtask] : [subtask] };
       }
       return task;
     }))
@@ -79,29 +80,19 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
   }
 
   function completeTask(taskId: string) {
-    setAllTasks(prevState => changeIsCompletedStatus(prevState, taskId, true));
+    setAllTasks(prevState => changeIsCompletedTaskStatus(prevState, taskId, true));
   }
 
   function uncheckCompletedTask(taskId: string) {
-    setAllTasks(prevState => changeIsCompletedStatus(prevState, taskId, false));
+    setAllTasks(prevState => changeIsCompletedTaskStatus(prevState, taskId, false));
   }
 
-  function checkSubtask(taskId: string, subtaskId: string) {
-    setAllTasks(prevState => prevState.map(task => {
-      if (task.id === taskId) {
-        return { ...task, subtasks: task.subtasks?.map(subtask => subtask.id === subtaskId ? { ...subtask, isCompleted: true } : subtask) };
-      }
-      return task;
-    }))
+  function checkSubtask(subtaskId: string) {
+    setAllTasks(prevState => changeIsCompetedSubtaskStatus(prevState, subtaskId, true));
   }
 
   function uncheckCompletedSubtask(subtaskId: string) {
-    setAllTasks(prevState => prevState.map(task => {
-      if (task.subtasks?.find(subtask => subtask.id === subtaskId)) {
-        return { ...task, subtasks: task.subtasks?.map(subtask => subtask.id === subtaskId ? { ...subtask, isCompleted: false } : subtask) };
-      }
-      return task;
-    }))
+    setAllTasks(prevState => changeIsCompetedSubtaskStatus(prevState, subtaskId, false))
   }
 
   function editSubtask(taskId: string, subtaskId: string, title: string) {
@@ -126,8 +117,13 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
     }))
   }
 
-  function updateSubtaskList() {
-
+  function updateSubtaskList(subtaskList: SubtaskType[], taskId: string) {
+    setAllTasks(prevState => prevState.map(task => {
+      if (task.id === taskId) {
+        return { ...task, subtasks: subtaskList };
+      }
+      return task;
+    }))
   }
 
   return (
@@ -150,7 +146,7 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
       changeIsEditModeStatus,
       isEditMode,
       changeIsEditableStatus,
-      updateSubtaskList
+      updateSubtaskList,
     }}>
       {children}
     </TasksContext.Provider>

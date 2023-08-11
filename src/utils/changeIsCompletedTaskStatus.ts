@@ -1,6 +1,6 @@
 import { TaskType } from "../interfaces/TaskType";
 
-export const changeIsCompletedStatus = (
+export const changeIsCompletedTaskStatus = (
   state: TaskType[],
   taskId: string,
   status: boolean
