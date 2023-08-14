@@ -7,7 +7,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 
 export function Home() {
   const [task, setTask] = useState("");
-  const { addNewTask } = useContext(TasksContext);
+  const { addNewTask, allTasks } = useContext(TasksContext);
   const { theme } = useContext(ThemeContext);
 
   function handleAddNewTodo(event: FormEvent) {
@@ -28,7 +28,7 @@ export function Home() {
 
   return (
     <main
-      className={clsx("flex flex-col items-center justify-center max-h-screen h-screen relative bg-bg  px-16 max-md:px-8 w-screen ", {
+      className={clsx("flex flex-col items-center justify-center max-h-screen h-screen relative bg-bg  px-16 max-md:px-8 w-screen transition-all", {
         "bg-dark-bg": theme === "dark",
         "bg-light-bg": theme === "light",
       })}
@@ -99,7 +99,8 @@ export function Home() {
           <Separator
             className={clsx("my-8 ", {
               "bg-dark-border": theme === "dark",
-              "bg-light-border": theme === "light"
+              "bg-light-border": theme === "light",
+              "invisible": allTasks.length === 0
             })}
           />
           <DraggableTaskList />

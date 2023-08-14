@@ -33,6 +33,7 @@ interface TasksContextTypes {
     taskId: string,
     subtaskId: string
   ) => void;
+  editTitle: (taskId: string, title: string) => void;
 }
 
 export const TasksContext = createContext({} as TasksContextTypes);

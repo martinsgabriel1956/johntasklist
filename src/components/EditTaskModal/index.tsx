@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { PencilSimpleLine, X } from 'phosphor-react';
 import clsx from 'clsx';
@@ -15,8 +15,11 @@ interface EditTaskModalProps {
 }
 
 export function EditTaskModal({ isOpenModal, setIsOpenModal, task }: EditTaskModalProps) {
-  const { generateNewSubtaskInput, subtasks, clearSubtasksInput } = useContext(TasksContext);
+  const [isEditTaskTitle, setIsEditTaskTitle] = useState(false);
+  const [taskTitle, setTaskTitle] = useState(task.title ?? "");
+  const { generateNewSubtaskInput, subtasks, clearSubtasksInput, editTitle } = useContext(TasksContext);
   const { theme } = useContext(ThemeContext);
+  const hasSeparator = task.subtasks && task.subtasks.length > 0 || subtasks.length > 0;
 
   function handleGenerateNewSubtask() {
     if (subtasks.length > 0) {
@@ -24,6 +27,16 @@ export function EditTaskModal({ isOpenModal, setIsOpenModal, task }: EditTaskMod
     }
 
     generateNewSubtaskInput();
+  }
+
+  function handleEditTitle() {
+    editTitle(task.id, taskTitle);
+    setIsEditTaskTitle(false);
+    setTaskTitle(task.title ?? "")
+  }
+
+  function handleChangeEditTitleStatus() {
+    setIsEditTaskTitle(true);
   }
 
   return (
@@ -49,14 +62,49 @@ export function EditTaskModal({ isOpenModal, setIsOpenModal, task }: EditTaskMod
             })}
           >
             <div className="flex items-center justify-between gap-16 mb-8">
-              <h1
-                className={clsx("font-bold leading-normal text-3xl", {
-                  "text-white": theme === "dark",
-                  "text-dark-bg": theme === "light",
-                })}
-              >
-                {task?.title}
-              </h1>
+              <div className='flex gap-1 group'>
+                {!isEditTaskTitle ? (
+                  <>
+                    <h1
+                      className={clsx("font-bold leading-normal text-3xl group-hover:underline", {
+                        "text-white": theme === "dark",
+                        "text-dark-bg": theme === "light",
+                      })}
+                    >
+                      {task?.title}
+                    </h1>
+                    <button
+                      title='Edit task title'
+                      className='hidden group-hover:inline-block pt-4'
+                      onClick={handleChangeEditTitleStatus}
+                    >
+                      <PencilSimpleLine
+                        size={16}
+                        weight='bold'
+                        className={clsx('', {
+                          "text-dark-purple": theme === "dark",
+                          "text-dark-bg": theme === "light",
+                        })}
+                      />
+                    </button>
+                  </>
+
+                ) : (
+                  <>
+                    <input
+                      title='Change title input'
+                      type="text"
+                      onBlur={handleEditTitle}
+                      value={taskTitle}
+                      onChange={event => setTaskTitle(event.target.value)}
+                      className={clsx("w-full font-bold leading-normal text-3xl mx-auto h-12 bg-transparent outline-none cursor-text", {
+                        "text-white": theme === "dark",
+                        "text-dark-purple": theme === "light"
+                      })}
+                    />
+                  </>
+                )}
+              </div>
               <div className="">
                 <button
                   type="button"
@@ -93,9 +141,12 @@ export function EditTaskModal({ isOpenModal, setIsOpenModal, task }: EditTaskMod
               </button>
             </div>
 
-            <Separator
-              className='mt-6 bg-dark-border'
-            />
+
+            {hasSeparator && (
+              <Separator
+                className='mt-6 bg-dark-border'
+              />
+            )}
 
             {subtasks?.map(subtask => (
               <SubtaskInput

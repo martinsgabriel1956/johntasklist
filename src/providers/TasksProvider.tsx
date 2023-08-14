@@ -98,7 +98,7 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
   function editSubtask(taskId: string, subtaskId: string, title: string) {
     setAllTasks(prevState => prevState.map(task => {
       if (task.id === taskId) {
-        return { ...task, subtasks: task.subtasks?.map(subtask => subtask.id === subtaskId ? { ...subtask, title } : subtask) };
+        return { ...task, subtasks: task.subtasks?.map(subtask => subtask.id === subtaskId && subtask.title !== title ? { ...subtask, title } : subtask) };
       }
       return task;
     }));
@@ -126,6 +126,17 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
     }))
   }
 
+  function editTitle(taskId: string, title: string) {
+    setAllTasks(prevState => prevState.map(task => {
+      const hasSameId = task.id === taskId;
+
+      if (hasSameId && title.trim() !== "") {
+        return { ...task, title };
+      }
+      return task;
+    }))
+  }
+
   return (
     <TasksContext.Provider value={{
       addNewTask,
@@ -147,6 +158,7 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
       isEditMode,
       changeIsEditableStatus,
       updateSubtaskList,
+      editTitle
     }}>
       {children}
     </TasksContext.Provider>

@@ -46,6 +46,12 @@ export function SubtaskInput({ subtaskId, taskId, className, title }: SubtaskInp
     changeIsEditableStatus(false, taskId, subtaskId);
   }
 
+  function handleBlur() {
+    if (isEditMode) {
+      handleEditSubtask();
+    }
+  }
+
   return (
     <div className={`flex items-center gap-4 ${className}`}>
       <Article
@@ -59,7 +65,8 @@ export function SubtaskInput({ subtaskId, taskId, className, title }: SubtaskInp
         title="Subtask"
         type="text"
         placeholder="Subtask"
-        className={clsx("w-full mx-auto h-12 bg-transparent outline-none cursor-text", {
+        onBlur={handleBlur}
+        className={clsx("w-full mx-auto h-12 text-xl bg-transparent outline-none cursor-text", {
           "text-white": theme === "dark",
           "text-dark-purple": theme === "light"
         })}
