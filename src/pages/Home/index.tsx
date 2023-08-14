@@ -103,7 +103,26 @@ export function Home() {
               "invisible": allTasks.length === 0
             })}
           />
-          <DraggableTaskList />
+          {allTasks.length === 0 ? (
+            <div
+              className="min-w-[275px] max-w-[500px] flex flex-col items-center justify-center mx-auto"
+            >
+              <img
+                src={`/src/assets/hero-${theme === "dark" ? "dark" : "light"}.svg`}
+                alt=""
+                className="w-full pb-4"
+              />
+              <span
+                className={clsx("text-2xl ", {
+                  "text-dark-purple": theme === "dark",
+                  "text-light-text": theme === "light"
+                })}
+              >
+                Add a new task to see it here
+              </span>
+            </div>
+          ) : <DraggableTaskList />}
+
         </div>
       </form>
       <ThemeSwitchButton />

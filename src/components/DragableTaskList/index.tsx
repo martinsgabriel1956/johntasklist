@@ -19,7 +19,7 @@ export function DraggableTaskList() {
       <Droppable droppableId="tasks">
         {(provided) => (
           <ul
-            className="h-96 overflow-auto pr-4 scrollbar-thin scrollbar-track-zin-950 scrollbar-thumb-zinc-800"
+            className="max-sm:h-72  h-96 overflow-auto pr-4 scrollbar-thin scrollbar-track-zin-950 scrollbar-thumb-zinc-800"
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
