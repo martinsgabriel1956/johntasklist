@@ -11,23 +11,24 @@ export function ThemeSwitchButton() {
   }
 
   return (
-    <div
-      className={clsx("flex items-center justify-center rounded-md border border-solid  w-12 h-12 absolute max-md:right-[3rem] right-[4.5rem] top-16 transition-all", {
-        "bg-buttonBgDark": theme === "dark",
-        "border-dark-border": theme === "dark",
-        "bg-buttonBgLight": theme === "light",
-        "border-light-border": theme === "light",
-        "text-dark-text": theme === "dark",
-        "text-light-text": theme === "light",
-      })}
+    <button
+      title="Change theme"
+      className=""
+      onClick={handleChangeTheme}
     >
-      <button
-        title="Change theme"
-        className=""
-        onClick={handleChangeTheme}
+      <div
+        className={clsx("flex items-center justify-center rounded-md border border-solid  w-12 h-12 absolute max-md:right-[3rem] right-[4.5rem] top-16 transition-all", {
+          "bg-buttonBgDark": theme === "dark",
+          "border-dark-border": theme === "dark",
+          "bg-buttonBgLight": theme === "light",
+          "border-light-border": theme === "light",
+          "text-dark-text": theme === "dark",
+          "text-light-text": theme === "light",
+        })}
       >
+
         {theme === "dark" ? <Moon size={24} /> : <Sun size={24} />}
-      </button>
-    </div>
+      </div>
+    </button>
   );
 }

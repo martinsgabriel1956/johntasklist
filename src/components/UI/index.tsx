@@ -5,4 +5,5 @@ export { ModalSubtask } from "./ModalSubtask";
 export { SeparatorComponent as Separator } from "./Separator";
 export { Subtask } from "./Subtask";
 export { SubtaskInput } from "./SubtaskInput";
+export { ToastComponent as Toast } from "./Toast";
 export { ThemeSwitchButton } from "./ThemeSwitchButton";
