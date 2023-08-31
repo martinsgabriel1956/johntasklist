@@ -14,6 +14,7 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
   const [allTasks, setAllTasks] = useState<TaskType[]>([]);
   const [subtasks, setSubtasks] = useState<SubtaskType[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditTaskTitle, setIsEditTaskTitle] = useState(false);
 
   function addNewTask(task: string) {
     const newTask: TaskType = {
@@ -137,6 +138,10 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
     }))
   }
 
+  function changeIsEditTaskTitleStatus(status: boolean) {
+    setIsEditTaskTitle(status);
+  }
+
   return (
     <TasksContext.Provider value={{
       addNewTask,
@@ -158,7 +163,9 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
       isEditMode,
       changeIsEditableStatus,
       updateSubtaskList,
-      editTitle
+      editTitle,
+      isEditTaskTitle,
+      changeIsEditTaskTitleStatus
     }}>
       {children}
     </TasksContext.Provider>

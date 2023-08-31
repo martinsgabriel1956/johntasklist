@@ -34,6 +34,8 @@ interface TasksContextTypes {
     subtaskId: string
   ) => void;
   editTitle: (taskId: string, title: string) => void;
+  isEditTaskTitle: boolean;
+  changeIsEditTaskTitleStatus: (status: boolean) => void;
 }
 
 export const TasksContext = createContext({} as TasksContextTypes);

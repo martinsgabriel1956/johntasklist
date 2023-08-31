@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { X } from 'phosphor-react';
 import clsx from 'clsx';
 import { DraggableTaskList, Separator, ThemeSwitchButton } from "../../components";
@@ -7,6 +7,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 
 export function Home() {
   const [task, setTask] = useState("");
+  const [hasError, setHasError] = useState(false);
   const { addNewTask, allTasks } = useContext(TasksContext);
   const { theme } = useContext(ThemeContext);
 
@@ -15,11 +16,18 @@ export function Home() {
     const isToDoInputEmpty = task.trim() === "";
 
     if (isToDoInputEmpty) {
+      setHasError(true);
       return;
     }
 
     addNewTask(task);
     setTask("");
+  }
+
+  function handleChangeTaskField(event: ChangeEvent<HTMLInputElement>) {
+    const isEmptyField = event.target.value.trim() === "";
+    if (!isEmptyField) setHasError(false);
+    setTask(event.target.value);
   }
 
   function handleCleanTodo() {
@@ -54,27 +62,35 @@ export function Home() {
                   "bg-dark-text/30": theme === "light",
                   "text-white": theme === "dark",
                   "text-light-text": theme === "light",
+                  "placeholder:text-dark-gradientFrom": theme === "light",
                 })}
                 placeholder="Add new task"
                 value={task}
-                onChange={event => setTask(event.target.value)}
+                onChange={handleChangeTaskField}
               />
               {task && (
                 <button
                   type="button"
-                  className="absolute top-3.5 right-4"
+                  className="absolute top-[0.8594rem] right-3"
                   onClick={handleCleanTodo}
                   title="Add new ToDo input"
                 >
-                  <X className="w-6 h-6 text-white" />
+                  <X className={clsx("w-6 h-6 ", {
+                    "text-white": theme === "dark",
+                    "text-light-text": theme === "light"
+                  })} />
                 </button>
+              )}
+              {hasError && (
+                <small className="absolute text-base mt-2 block font-bold text-red-600/90">
+                  Fill in the task field
+                </small>
               )}
             </div>
             <div>
               <button
-                disabled={task.trim() === ""}
                 type="submit"
-                className={clsx("disabled:cursor-not-allowed border-2 border-solid  p-2.5 rounded-lg   transition-all disabled:opacity-[0.75]", {
+                className={clsx("disabled:cursor-not-allowed border-2 border-solid  p-2.5 rounded-lg   transition-all", {
                   "border-dark-purple/40": theme === "dark",
                   "border-dark-text/90": theme === "light",
                   "text-dark-text": theme === "dark",
