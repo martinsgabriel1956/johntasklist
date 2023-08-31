@@ -27,13 +27,14 @@ interface TasksContextTypes {
   updateSubtaskList: (subtaskList: SubtaskType[], taskId: string) => void;
   clearSubtasksInput: () => void;
   editSubtask: (subtaskId: string, taskId: string, title: string) => void;
+  editTitle: (taskId: string, title: string) => void;
+  editDescription: (taskId: string, description: string) => void;
   changeIsEditModeStatus: (status: boolean) => void;
   changeIsEditableStatus: (
     status: boolean,
     taskId: string,
     subtaskId: string
   ) => void;
-  editTitle: (taskId: string, title: string) => void;
   isEditTaskTitle: boolean;
   changeIsEditTaskTitleStatus: (status: boolean) => void;
 }

@@ -1,5 +1,5 @@
-import { useContext, useState, useRef } from 'react';
-import { PencilSimpleLine, X } from 'phosphor-react';
+import { useContext, useState, useRef, useEffect } from 'react';
+import { List, PencilSimpleLine, X } from 'phosphor-react';
 import clsx from 'clsx';
 import { ThemeContext } from '../../../context/ThemeContext';
 import { TasksContext } from '../../../context/TasksContext';
@@ -14,9 +14,19 @@ export function EditTaskModal({ task }: EditTaskModalProps) {
   const taskInputRef = useRef<HTMLInputElement>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [taskTitle, setTaskTitle] = useState(task.title ?? "");
-  const { generateNewSubtaskInput, subtasks, clearSubtasksInput, editTitle, isEditTaskTitle, changeIsEditTaskTitleStatus, isEditMode, changeIsEditModeStatus } = useContext(TasksContext);
+  const [description, setDescription] = useState(task.description ?? "");
+  const [focused, setFocused] = useState(false);
+  const { generateNewSubtaskInput, subtasks, clearSubtasksInput, editTitle, isEditTaskTitle, changeIsEditTaskTitleStatus, isEditMode, changeIsEditModeStatus, editDescription } = useContext(TasksContext);
   const { theme } = useContext(ThemeContext);
   const hasSeparator = task.subtasks && task.subtasks.length > 0 || subtasks.length > 0;
+
+  useEffect(() => {
+    if (focused) {
+      taskInputRef.current?.focus();
+    } else {
+      taskInputRef.current?.blur();
+    }
+  }, [focused])
 
   function handleGenerateNewSubtask() {
     if (subtasks.length > 0) {
@@ -49,7 +59,15 @@ export function EditTaskModal({ task }: EditTaskModalProps) {
     changeIsEditTaskTitleStatus(false);
   }
 
-  console.log({ isEditTaskTitle });
+  function handleChangeAddOrEditTaskDescription() {
+    setFocused(true);
+  }
+
+  function handleDescriptionBlur() {
+    setFocused(false);
+    editDescription(task.id, description);
+    setDescription(description ?? "");
+  }
 
   return (
     <>
@@ -58,7 +76,7 @@ export function EditTaskModal({ task }: EditTaskModalProps) {
         setIsOpenModal={handleChangeModalStatus}
         type='edit'
       >
-        <div className="flex items-center justify-between gap-16 mb-8">
+        <div className="flex items-center justify-between gap-16 mb-4">
           <div className='flex gap-1 group'>
             {!isEditTaskTitle ? (
               <>
@@ -94,7 +112,6 @@ export function EditTaskModal({ task }: EditTaskModalProps) {
                   type="text"
                   onBlur={handleEditTitle}
                   value={taskTitle}
-                  ref={taskInputRef}
                   onChange={event => setTaskTitle(event.target.value)}
                   className={clsx("w-full font-bold leading-normal text-3xl mx-auto h-12 bg-transparent outline-none cursor-text", {
                     "text-white": theme === "dark",
@@ -122,6 +139,25 @@ export function EditTaskModal({ task }: EditTaskModalProps) {
           </div>
         </div>
         <div className="">
+          <div className="mb-6 flex gap-2">
+            <button
+              type='button'
+              onClick={handleChangeAddOrEditTaskDescription}
+              title="Description icon"
+            >
+              <List size={24} weight="fill" className='text-white' />
+            </button>
+            <input
+              value={description}
+              ref={taskInputRef}
+              onBlur={handleDescriptionBlur}
+              onChange={event => setDescription(event.target.value)}
+              type="text"
+              placeholder='Description'
+              className='w-full bg-transparent outline-none text-gray-400'
+            />
+          </div>
+
           <button
             className={clsx('border-2 border-solid rounded-md p-3 hover:bg-gradient-to-r transition-all', {
               "bg-dark-purple/30": theme === "dark",

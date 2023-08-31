@@ -142,6 +142,17 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
     setIsEditTaskTitle(status);
   }
 
+  function editDescription(taskId: string, description: string) {
+    setAllTasks(prevState => prevState.map(task => {
+      const hasSameId = task.id === taskId;
+
+      if (hasSameId && description.trim() !== "") {
+        return { ...task, description };
+      }
+      return task;
+    }))
+  }
+
   return (
     <TasksContext.Provider value={{
       addNewTask,
@@ -165,7 +176,8 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
       updateSubtaskList,
       editTitle,
       isEditTaskTitle,
-      changeIsEditTaskTitleStatus
+      changeIsEditTaskTitleStatus,
+      editDescription
     }}>
       {children}
     </TasksContext.Provider>
