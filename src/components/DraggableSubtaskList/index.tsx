@@ -1,20 +1,20 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { TasksContext } from "../../context/TasksContext";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { Subtask } from "../UI/Subtask";
 
 export function DraggableSubtaskList() {
   const { allTasks, updateSubtaskList } = useContext(TasksContext);
   const [taskId, setTaskId] = useState("");
 
-  const onDragEnd = (result) => {
+  const onDragEnd = useCallback((result: DropResult) => {
     if (!result.destination) return;
     const allSubtask = allTasks.map(task => task.subtasks!);
     const items = Array.from(allSubtask);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
     updateSubtaskList(items.flat(), taskId);
-  };
+  }, [allTasks, updateSubtaskList, taskId]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
